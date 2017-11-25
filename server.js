@@ -11,6 +11,9 @@ const apiController = require('./controllers/api');
 const app = express();
 const port = 8000;
 
+app.set('host', '0.0.0.0');
+app.set('port', process.env.PORT || port);
+
 app.get('/', function (req, res) {
     res.send('<a href=\"/api/artist\">API example</a>');
 });
@@ -20,8 +23,11 @@ app.get('/api/artist', apiController.getArtist);
 /**
  * Start Express server.
  */
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log('We are live on ' + port);
 });
 
-module.exports = app;
+module.exports = {
+    server : server,
+    app : app
+};
