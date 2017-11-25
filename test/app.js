@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../server.js').app;
 const server = require('../server.js').server;
 const urljoin = require('url-join');
+const expect = require('chai').expect;
 
 describe('GET /api/artist/:mbid', () => {
   after(function(done) {
@@ -16,14 +17,18 @@ describe('GET /api/artist/:mbid', () => {
 
     request(app)
       .get(reqUrl)
-      .expect(
-        200,
-        {
-          mbid: artistId,
-          name: 'Le Knight Club',
-          description: desc
-        },
-        done
-      );
+      .expect(200)
+      .end(function(err, res) {
+        expect(res.body).to.have.property('mbid');
+        expect(res.body.mbid).to.equal(artistId);
+
+        expect(res.body).to.have.property('name');
+        expect(res.body.name).to.equal('Le Knight Club');
+
+        expect(res.body).to.have.property('description');
+        expect(res.body.description).to.not.equal(null);
+
+        done();
+      });
   });
 });
