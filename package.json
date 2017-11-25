@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha",
     "dev": "nodemon server.js",
-    "watch:test": "mocha -w"
+    "watch:test": "mocha -w",
+    "lint": "eslint **/*.js"
   },
   "repository": {
     "type": "git",
@@ -23,8 +24,10 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "eslint": "^4.11.0",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
+    "prettier-eslint": "^8.2.2",
     "supertest": "^3.0.0"
   }
 }
