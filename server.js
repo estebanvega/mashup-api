@@ -26,7 +26,7 @@ app.get('/', function (req, res) {
   res.send('<a href="/api/artist">API example</a>');
 });
 
-app.get('/api/artist', apiController.getArtist);
+app.get('/api/artist/:mbid', apiController.getArtist);
 app.get('/api/musicbrainz/:id', apiController.getMusicBrainz);
 
 /**
