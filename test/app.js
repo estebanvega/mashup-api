@@ -7,4 +7,12 @@ describe('GET /api/artist', () => {
             .get('/api/artist')
             .expect(200, done);
     });
+
+    it('should return artist name', (done) => {
+        request(app)
+            .get('/api/artist')
+            .expect(200, {
+                name: 'Le Knight Club'
+            }, done);
+    });
 });
