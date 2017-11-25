@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/estebanvega/mashup-api/issues"
   },
-  "homepage": "https://github.com/estebanvega/mashup-api#readme"
+  "homepage": "https://github.com/estebanvega/mashup-api#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  }
 }
