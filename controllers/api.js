@@ -9,8 +9,9 @@ exports.getArtist = (req, res) => {
 
   getMusicBrainz(mbid)
     .then(mbRes => getWikipedia(mbRes))
-    .then(wikiRes => {
-      res.status(200).json(wikiRes);
+    .then(wikiRes => getAlbumCoverArts(wikiRes))
+    .then(apiRes => {
+      return res.status(200).json(apiRes);
     });
 };
 
@@ -94,6 +95,66 @@ const getWikipedia = artistObj => {
     })
     .catch(err => {
       return err;
+    });
+};
+
+/**
+ * Request Cover Art Archive API with release id:s as param
+ */
+const getSingleCoverArt = albumObj => {
+  const baseUrl = 'https://coverartarchive.org/release-group/';
+  const url = urljoin(baseUrl, albumObj.id);
+
+  const options = {
+    uri: url,
+    headers: {
+      'User-Agent': 'mashup-api'
+    },
+    resolveWithFullResponse: false,
+    json: true
+  };
+
+  return rp(options)
+    .then(body => {
+      const images = body.images;
+      const firstEntry = images[Object.keys(images)[0]];
+
+      return Object.assign(
+        {
+          id: albumObj.id,
+          image: firstEntry.image
+        },
+        albumObj
+      );
+    })
+    .catch(err => {
+      console.log('err msg: ', err.message);
+
+      return Object.assign(
+        {
+          id: albumObj.id,
+          image: 'No cover art available'
+        },
+        albumObj
+      );
+    });
+};
+
+/**
+ * Request all album covers for a specific artist
+ */
+const getAlbumCoverArts = artistObj => {
+  let albumWithCoverArts = [];
+
+  for (let album of artistObj.albums) {
+    albumWithCoverArts.push(getSingleCoverArt(album));
+  }
+
+  return Promise.all(albumWithCoverArts)
+    .then(updatedAlbums => {
+      Object.assign(artistObj.albums, updatedAlbums);
+
+      return artistObj; 
     });
 };
 
