@@ -2,7 +2,11 @@ const request = require('supertest');
 const app = require('../server.js').app;
 const server = require('../server.js').server;
 const urljoin = require('url-join');
+
+const chai = require('chai');
 const expect = require('chai').expect;
+
+chai.use(require('chai-things'));
 
 describe('GET /api/artist/:mbid', () => {
   after(function(done) {
@@ -29,6 +33,10 @@ describe('GET /api/artist/:mbid', () => {
 
         expect(res.body).to.have.property('albums');
         expect(res.body.albums).to.be.an('array').that.is.not.empty;
+
+        expect(res.body.albums).to.all.have.property('id');
+        expect(res.body.albums).to.all.have.property('title');
+        expect(res.body.albums).to.all.have.property('image');
 
         done();
       });
