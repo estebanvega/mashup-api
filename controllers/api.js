@@ -5,14 +5,19 @@ const urljoin = require('url-join');
  * GET /api/artist/:mbid
  */
 exports.getArtist = (req, res) => {
-  const mbid  = req.params.mbid;
+  const mbid = req.params.mbid;
 
-  getMusicBrainz(mbid).then(response => {
-    res.status(200).json(response);
-  });
+  getMusicBrainz(mbid)
+    .then(mbRes => getWikipedia(mbRes))
+    .then(wikiRes => {
+      res.status(200).json(wikiRes);
+    });
 };
 
-const getMusicBrainz = (mbid) => {
+/**
+ * Request MusicBrainz API with artist ID as param
+ */
+const getMusicBrainz = mbid => {
   const baseUrl = 'https://musicbrainz.org/ws/2/artist/';
   const url = urljoin(baseUrl, mbid);
 
@@ -37,6 +42,41 @@ const getMusicBrainz = (mbid) => {
         mbid: parsedBody.id,
         name: parsedBody.name
       };
+    })
+    .catch(err => {
+      return err;
+    });
+};
+
+/**
+ * Request Wikipedia API with artist name as param
+ */
+const getWikipedia = artistObj => {
+  const baseUrl = 'https://en.wikipedia.org/w/api.php';
+
+  const options = {
+    uri: baseUrl,
+    qs: {
+      action: 'query',
+      format: 'json',
+      prop: 'extracts',
+      exintro: true,
+      redirects: true,
+      titles: artistObj.name
+    },
+    headers: {
+      'User-Agent': 'mashup-api'
+    },
+    resolveWithFullResponse: false,
+    json: true
+  };
+
+  return rp(options)
+    .then(body => {
+      const pages = body.query.pages;
+      const firstPage = pages[Object.keys(pages)[0]];
+
+      return Object.assign(artistObj, { description: firstPage.extract });
     })
     .catch(err => {
       return err;
