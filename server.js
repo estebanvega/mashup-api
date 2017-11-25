@@ -6,12 +6,10 @@ const bodyParser = require('body-parser');
  */
 const apiController = require('./controllers/api');
 
-
 /**
  * Create Express server.
  */
 const app = express();
-
 
 /**
  * Express configuration.
@@ -21,8 +19,7 @@ app.set('host', '0.0.0.0');
 app.set('port', port);
 app.use(bodyParser.json());
 
-
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.send('<a href="/api/artist">API example</a>');
 });
 
