@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../server.js').app;
 const server = require('../server.js').server;
+const urljoin = require('url-join');
 
 describe('GET /api/artist', () => {
   after(function(done) {
@@ -15,12 +16,15 @@ describe('GET /api/artist', () => {
   });
 
   it('should return JSON response', done => {
+    const artistId = '81739b1e-609d-4a63-beaa-4422ca5e278a';
+    const reqUrl = urljoin('/api/artist/', artistId);
+
     request(app)
-      .get('/api/artist')
+      .get(reqUrl)
       .expect(
         200,
         {
-          mbid: '81739b1e-609d-4a63-beaa-4422ca5e278a',
+          mbid: artistId,
           name: 'Le Knight Club'
         },
         done
