@@ -1,5 +1,6 @@
 const rp = require('request-promise');
 const urljoin = require('url-join');
+const Promise = require('bluebird');
 
 /**
  * GET /api/artist/:mbid
@@ -7,12 +8,24 @@ const urljoin = require('url-join');
 exports.getArtist = (req, res) => {
   const mbid = req.params.mbid;
 
-  getMusicBrainz(mbid)
-    .then(mbRes => getWikipedia(mbRes))
-    .then(wikiRes => getAlbumCoverArts(wikiRes))
-    .then(apiRes => {
-      return res.status(200).json(apiRes);
-    });
+  getMusicBrainz(mbid).then(mbRes => {
+    Promise.join(
+      getWikipedia(mbRes),
+      getAlbumCoverArts(mbRes.albums),
+      (resolvedDesc, resolvedAlbums) => {
+
+        const result = Object.assign(
+          {
+            description: resolvedDesc,
+            albums: resolvedAlbums
+          },
+          mbRes
+        );
+
+        return res.status(200).json(result);
+      }
+    );
+  });
 };
 
 /**
@@ -42,7 +55,7 @@ const getMusicBrainz = mbid => {
       return {
         mbid: parsedBody.id,
         name: parsedBody.name,
-        albums: mapReleasesToAlbums(parsedBody['release-groups']) 
+        albums: mapReleasesToAlbums(parsedBody['release-groups'])
       };
     })
     .catch(err => {
@@ -86,6 +99,8 @@ const getWikipedia = artistObj => {
     json: true
   };
 
+  console.log('wikipedia request');
+
   return rp(options)
     .then(body => {
       const pages = body.query.pages;
@@ -101,9 +116,9 @@ const getWikipedia = artistObj => {
 /**
  * Request Cover Art Archive API with release id:s as param
  */
-const getSingleCoverArt = albumObj => {
+const getSingleCoverArt = album => {
   const baseUrl = 'https://coverartarchive.org/release-group/';
-  const url = urljoin(baseUrl, albumObj.id);
+  const url = urljoin(baseUrl, album.id);
 
   const options = {
     uri: url,
@@ -114,17 +129,18 @@ const getSingleCoverArt = albumObj => {
     json: true
   };
 
+  console.log('cover art request: ', url);
+
   return rp(options)
     .then(body => {
       const images = body.images;
       const firstEntry = images[Object.keys(images)[0]];
-
+       
       return Object.assign(
         {
-          id: albumObj.id,
           image: firstEntry.image
         },
-        albumObj
+        album
       );
     })
     .catch(err => {
@@ -132,10 +148,10 @@ const getSingleCoverArt = albumObj => {
 
       return Object.assign(
         {
-          id: albumObj.id,
+          id: album.id,
           image: 'No cover art available'
         },
-        albumObj
+        album
       );
     });
 };
@@ -143,19 +159,16 @@ const getSingleCoverArt = albumObj => {
 /**
  * Request all album covers for a specific artist
  */
-const getAlbumCoverArts = artistObj => {
+const getAlbumCoverArts = albums => {
   let albumWithCoverArts = [];
 
-  for (let album of artistObj.albums) {
+  for (let album of albums) {
     albumWithCoverArts.push(getSingleCoverArt(album));
   }
 
-  return Promise.all(albumWithCoverArts)
-    .then(updatedAlbums => {
-      Object.assign(artistObj.albums, updatedAlbums);
-
-      return artistObj; 
-    });
+  return Promise.all(albumWithCoverArts).then(updatedAlbums => {
+    return Object.assign(albums, updatedAlbums);
+  });
 };
 
 /**
