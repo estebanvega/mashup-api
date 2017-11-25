@@ -2,6 +2,11 @@ const rp = require('request-promise');
 const urljoin = require('url-join');
 const Promise = require('bluebird');
 
+const winston = require('winston');
+const logger = new winston.Logger({
+  transports: [new winston.transports.Console({ timestamp: true })]
+});
+
 /**
  * GET /api/artist/:mbid
  */
@@ -99,7 +104,7 @@ const getWikipedia = artistObj => {
     json: true
   };
 
-  console.log('wikipedia request');
+  logger.info('Sending request to Wikipedia API');
 
   return rp(options)
     .then(body => {
@@ -109,7 +114,9 @@ const getWikipedia = artistObj => {
       return Object.assign(artistObj, { description: firstPage.extract });
     })
     .catch(err => {
-      return err;
+      logger.error('Wikipedia API response: %s', err);
+
+      return Object.assign(artistObj, { description: 'No description found' });
     });
 };
 
@@ -129,7 +136,7 @@ const getSingleCoverArt = album => {
     json: true
   };
 
-  console.log('cover art request: ', url);
+  logger.info('Sending request to Cover Art API: %s', album.id);
 
   return rp(options)
     .then(body => {
@@ -144,7 +151,7 @@ const getSingleCoverArt = album => {
       );
     })
     .catch(err => {
-      console.log('err msg: ', err.message);
+      logger.error('Cover Art API response: %s', err);
 
       return Object.assign(
         {
