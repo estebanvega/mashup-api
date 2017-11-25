@@ -3,16 +3,10 @@ const app = require('../server.js').app;
 const server = require('../server.js').server;
 const urljoin = require('url-join');
 
-describe('GET /api/artist', () => {
+describe('GET /api/artist/:mbid', () => {
   after(function(done) {
     server.close();
     done();
-  });
-
-  it('should return 200 OK', done => {
-    request(app)
-      .get('/api/artist')
-      .expect(200, done);
   });
 
   it('should return JSON response', done => {
