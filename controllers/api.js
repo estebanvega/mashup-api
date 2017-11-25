@@ -40,12 +40,26 @@ const getMusicBrainz = mbid => {
 
       return {
         mbid: parsedBody.id,
-        name: parsedBody.name
+        name: parsedBody.name,
+        albums: mapReleasesToAlbums(parsedBody['release-groups']) 
       };
     })
     .catch(err => {
       return err;
     });
+};
+
+const mapReleasesToAlbums = releaseGroups => {
+  let albums = [];
+
+  for (let release of releaseGroups) {
+    albums.push({
+      id: release.id,
+      title: release.title
+    });
+  }
+
+  return albums;
 };
 
 /**
