@@ -22,13 +22,19 @@ Example artist lookups (source: https://musicbrainz.org)
 * PM2 (npm install -g pm2)
 
 Start API:
+
 `$ npm start`
 
 Tailing logs:
+
 `$ pm2 logs mashup-api`
 
 Stop API:
+
 `$ pm2 stop mashup-api`
+
+API example
+- http://localhost:8000/api/artist/db92a151-1ac2-438b-bc43-b82e149ddd50
 
 # Testing
 - Test framework: Mocha
