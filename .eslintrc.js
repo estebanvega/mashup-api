@@ -1,6 +1,5 @@
 module.exports = {
     "env": {
-        "browser": true,
         "commonjs": true,
         "es6": true,
         "mocha": true
@@ -10,6 +9,7 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
+        "no-process-env": 0,
         "indent": [
             "error",
             2
