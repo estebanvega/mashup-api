@@ -1,5 +1,12 @@
-0.0.0.0:8080
-gzip
-log stdout
-
-proxy / mashup-api:8000
+0.0.0.0:8080 {
+    gzip
+    log stdout
+    proxy / mashup-api:8000
+    cache {
+        match_path /api/artist/
+        match_header Content-Type application/json
+        status_header X-Cache-Status
+        default_max_age 15m
+        path /tmp/caddy-cache
+    }
+}
