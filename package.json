@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --timeout 5000",
     "dev": "nodemon server.js",
-    "watch:test": "mocha -w",
+    "watch:test": "mocha -w --timeout 5000",
     "lint": "eslint **/*.js"
   },
   "repository": {
