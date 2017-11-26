@@ -18,7 +18,6 @@ exports.getArtist = (req, res) => {
       getWikipedia(mbRes),
       getAlbumCoverArts(mbRes.albums),
       (resolvedDesc, resolvedAlbums) => {
-
         const result = Object.assign(
           {
             description: resolvedDesc,
@@ -142,7 +141,7 @@ const getSingleCoverArt = album => {
     .then(body => {
       const images = body.images;
       const firstEntry = images[Object.keys(images)[0]];
-       
+
       return Object.assign(
         {
           image: firstEntry.image
@@ -173,9 +172,9 @@ const getAlbumCoverArts = albums => {
     albumWithCoverArts.push(getSingleCoverArt(album));
   }
 
-  return Promise.all(albumWithCoverArts).then(updatedAlbums => {
-    return Object.assign(albums, updatedAlbums);
-  });
+  return Promise.all(albumWithCoverArts).then(updatedAlbums =>
+    Object.assign(albums, updatedAlbums)
+  );
 };
 
 /**
