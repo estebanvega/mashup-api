@@ -18,9 +18,9 @@ const app = express();
 /**
  * Express configuration.
  */
-const port = 8000;
+const PORT = process.env.PORT || 8000;
 app.set('host', '0.0.0.0');
-app.set('port', port);
+app.set('port', PORT);
 app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
@@ -31,8 +31,8 @@ app.get('/api/artist/:mbid', apiController.getArtist);
 /**
  * Start Express server.
  */
-const server = app.listen(port, () => {
-  logger.info('Running at http://localhost:%s', port);
+const server = app.listen(PORT, () => {
+  logger.info('Running at http://localhost:%s', PORT);
 });
 
 module.exports = {

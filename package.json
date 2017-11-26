@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 5000",
+    "test": "PORT=8050 mocha --timeout 5000",
     "dev": "nodemon server.js",
-    "watch:test": "mocha -w --timeout 5000",
+    "watch:test": "PORT=8050 mocha -w --timeout 5000",
     "lint": "eslint **/*.js",
     "start": "pm2 start server.js --name='mashup-api'"
   },
