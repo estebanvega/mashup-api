@@ -14,5 +14,6 @@ RUN curl --silent --show-error --fail --location \
 COPY Caddyfile /etc/Caddyfile
 
 ENTRYPOINT ["/usr/bin/caddy"]
+EXPOSE 8080
 CMD ["--conf", "/etc/Caddyfile", "--log", "stdout"]
 
