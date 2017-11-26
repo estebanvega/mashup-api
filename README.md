@@ -26,3 +26,17 @@ Startup:
 
 Tailing logs:
 `$ pm2 logs mashup-api`
+
+
+# Testing
+- Test framework: Mocha
+- Assertion library: Chai
+- HTTP assertions: supertest
+
+Running tests:
+
+`$ npm test`
+
+Running tests in watch mode:
+
+`$ npm run watch:test`
