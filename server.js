@@ -26,14 +26,13 @@ app.use(bodyParser.json());
 app.get('/', function(req, res) {
   res.send('<a href="/api/artist">API example</a>');
 });
-
 app.get('/api/artist/:mbid', apiController.getArtist);
 
 /**
  * Start Express server.
  */
 const server = app.listen(port, () => {
-  logger.info('We are live on ' + port);
+  logger.info('Running at http://localhost:%s', port);
 });
 
 module.exports = {
