@@ -13,23 +13,24 @@ const logger = new winston.Logger({
 exports.getArtist = (req, res) => {
   const mbid = req.params.mbid;
 
-  getMusicBrainz(mbid).then(mbRes => {
-    Promise.join(
-      getWikipedia(mbRes),
-      getAlbumCoverArts(mbRes.albums),
-      (resolvedDesc, resolvedAlbums) => {
-        const result = Object.assign(
-          {
-            description: resolvedDesc,
-            albums: resolvedAlbums
-          },
-          mbRes
-        );
-
-        return res.status(200).json(result);
-      }
-    );
-  });
+  getMusicBrainz(mbid)
+    .then(mbRes => {
+      return Promise.join(
+        getWikipedia(mbRes),
+        getAlbumCoverArts(mbRes.albums),
+        (resolvedDesc, resolvedAlbums) => {
+          return Object.assign(
+            {
+              description: resolvedDesc,
+              albums: resolvedAlbums
+            },
+            mbRes
+          );
+        }
+      );
+    })
+    .then(result => res.status(200).json(result))
+    .catch(err => res.status(500).end(err.toString()));
 };
 
 /**
