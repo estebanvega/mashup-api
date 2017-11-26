@@ -1,5 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const winston = require('winston');
+const logger = new winston.Logger({
+  transports: [new winston.transports.Console({ timestamp: true })]
+});
 
 /**
  * Controllers
@@ -30,7 +34,7 @@ app.get('/api/musicbrainz/:id', apiController.getMusicBrainz);
  * Start Express server.
  */
 const server = app.listen(port, () => {
-  console.info('We are live on ' + port);
+  logger.info('We are live on ' + port);
 });
 
 module.exports = {
