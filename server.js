@@ -35,7 +35,11 @@ app.get('/api/artist/:mbid', apiController.getArtist);
 app.use(function(err, req, res, next) {
   logger.error(err);
 
-  res.json({ message: err.message });
+  if (req.app.get('env') !== 'development' && req.app.get('env') !== 'test') {
+    delete err.stack;
+  }
+
+  res.status(err.statusCode || 500).json({ message: err.message });
 });
 
 
