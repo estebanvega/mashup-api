@@ -7,8 +7,8 @@ services:
     links:
       - api:mashup-api
     restart: always
+    depends_on:
+      - api
   api:
     build: .
     restart: always
-    depends_on:
-      - caddy
