@@ -21,12 +21,14 @@ Example artist lookups (source: https://musicbrainz.org)
 * Node.js > 8.0
 * PM2 (npm install -g pm2)
 
-Startup:
+Start API:
 `$ npm start`
 
 Tailing logs:
 `$ pm2 logs mashup-api`
 
+Stop API:
+`$ pm2 stop mashup-api`
 
 # Testing
 - Test framework: Mocha
