@@ -26,7 +26,18 @@ app.use(bodyParser.json());
 app.get('/', function(req, res) {
   res.send('<a href="/api/artist">API example</a>');
 });
+
 app.get('/api/artist/:mbid', apiController.getArtist);
+
+/**
+ * Error Handler.
+ */
+app.use(function(err, req, res, next) {
+  logger.error(err);
+
+  res.json({ message: err.message });
+});
+
 
 /**
  * Start Express server.
