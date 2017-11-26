@@ -8,7 +8,7 @@
     "dev": "nodemon server.js",
     "watch:test": "mocha -w --timeout 5000",
     "lint": "eslint **/*.js",
-    "start": "pm2 start server.js"
+    "start": "pm2 start server.js --name='mashup-api'"
   },
   "repository": {
     "type": "git",
