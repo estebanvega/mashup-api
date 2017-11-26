@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const winston = require('winston');
 const logger = new winston.Logger({
   transports: [new winston.transports.Console({ timestamp: true })]
@@ -21,7 +20,6 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 app.set('host', '0.0.0.0');
 app.set('port', PORT);
-app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
   res.send('<a href="/api/artist">API example</a>');
