@@ -28,7 +28,6 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/artist/:mbid', apiController.getArtist);
-app.get('/api/musicbrainz/:id', apiController.getMusicBrainz);
 
 /**
  * Start Express server.
