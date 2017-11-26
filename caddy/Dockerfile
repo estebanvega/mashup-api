@@ -10,7 +10,6 @@ RUN curl --silent --show-error --fail --location \
     && chmod 0755 /usr/bin/caddy \
     && /usr/bin/caddy -version
 
-# COPY . /srv/ap
 COPY Caddyfile /etc/Caddyfile
 
 ENTRYPOINT ["/usr/bin/caddy"]
