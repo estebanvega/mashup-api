@@ -3,6 +3,7 @@ module.exports = {
     {
       name: 'mashup-api',
       script: './server.js',
+      watch: true,
       env: {
         NODE_ENV: 'development'
       },

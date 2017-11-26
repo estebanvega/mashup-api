@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "PORT=8050 mocha --timeout 5000",
-    "dev": "nodemon server.js",
+    "start:dev": "pm2 start ecosystem.config.js",
     "watch:test": "PORT=8050 mocha -w --timeout 5000",
     "lint": "eslint **/*.js",
     "start": "pm2 start ecosystem.config.js --env production"
@@ -33,7 +33,6 @@
     "chai-things": "^0.2.0",
     "eslint": "^4.11.0",
     "mocha": "^4.0.1",
-    "nodemon": "^1.12.1",
     "prettier-eslint": "^8.2.2",
     "supertest": "^3.0.0"
   },
