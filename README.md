@@ -6,11 +6,14 @@
 * Docker Engine > 1.13.0
 
 Container running Caddy server, proxying and caching requests to mashup-api.
-Separate container running mashup-api, based on minimal docker image with Node.js.
+Separate container running mashup-api, using minimal docker image with Node.js.
 
-Run and build with:
+First time usage, run and build with:
 `$ docker-compose up --build`
 
+Example artist lookups (source: https://musicbrainz.org)
+- Le Knight Club: http://localhost/api/artist/81739b1e-609d-4a63-beaa-4422ca5e278a
+- The Phantom's Revenge: http://localhost/api/artist/bf6f4ceb-2deb-4242-8950-74f7e1272c17
 
 ## Running locally with process manager, PM2
 
