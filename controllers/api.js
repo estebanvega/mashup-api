@@ -29,8 +29,8 @@ exports.getArtist = (req, res, next) => {
         }
       );
     })
-    .then(result =>  res.status(200).json(result))
-    .catch(err => next(new Error(err))); 
+    .then(result => res.status(200).json(result))
+    .catch(err => next(new Error(err)));
 };
 
 /**
