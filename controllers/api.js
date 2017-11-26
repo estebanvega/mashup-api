@@ -10,32 +10,33 @@ const logger = new winston.Logger({
 /**
  * GET /api/artist/:mbid
  */
-exports.getArtist = (req, res) => {
+exports.getArtist = (req, res, next) => {
   const mbid = req.params.mbid;
 
-  getMusicBrainz(mbid).then(mbRes => {
-    Promise.join(
-      getWikipedia(mbRes),
-      getAlbumCoverArts(mbRes.albums),
-      (resolvedDesc, resolvedAlbums) => {
-        const result = Object.assign(
-          {
-            description: resolvedDesc,
-            albums: resolvedAlbums
-          },
-          mbRes
-        );
-
-        return res.status(200).json(result);
-      }
-    );
-  });
+  getMusicBrainz(mbid, next)
+    .then(mbRes => {
+      return Promise.join(
+        getWikipedia(mbRes),
+        getAlbumCoverArts(mbRes.albums),
+        (resolvedDesc, resolvedAlbums) => {
+          return Object.assign(
+            {
+              description: resolvedDesc,
+              albums: resolvedAlbums
+            },
+            mbRes
+          );
+        }
+      );
+    })
+    .then(result => res.status(200).json(result))
+    .catch(err => next(new Error(err)));
 };
 
 /**
  * Request MusicBrainz API with artist ID as param
  */
-const getMusicBrainz = mbid => {
+const getMusicBrainz = (mbid, next) => {
   const baseUrl = 'https://musicbrainz.org/ws/2/artist/';
   const url = urljoin(baseUrl, mbid);
 
@@ -62,9 +63,7 @@ const getMusicBrainz = mbid => {
         albums: mapReleasesToAlbums(parsedBody['release-groups'])
       };
     })
-    .catch(err => {
-      return err;
-    });
+    .catch(err => next(new Error(err)));
 };
 
 const mapReleasesToAlbums = releaseGroups => {
