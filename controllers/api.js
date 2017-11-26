@@ -10,10 +10,10 @@ const logger = new winston.Logger({
 /**
  * GET /api/artist/:mbid
  */
-exports.getArtist = (req, res) => {
+exports.getArtist = (req, res, next) => {
   const mbid = req.params.mbid;
 
-  getMusicBrainz(mbid)
+  getMusicBrainz(mbid, next)
     .then(mbRes => {
       return Promise.join(
         getWikipedia(mbRes),
@@ -29,14 +29,14 @@ exports.getArtist = (req, res) => {
         }
       );
     })
-    .then(result => res.status(200).json(result))
-    .catch(err => res.status(500).end(err.toString()));
+    .then(result =>  res.status(200).json(result))
+    .catch(err => next(new Error(err))); 
 };
 
 /**
  * Request MusicBrainz API with artist ID as param
  */
-const getMusicBrainz = mbid => {
+const getMusicBrainz = (mbid, next) => {
   const baseUrl = 'https://musicbrainz.org/ws/2/artist/';
   const url = urljoin(baseUrl, mbid);
 
@@ -63,9 +63,7 @@ const getMusicBrainz = mbid => {
         albums: mapReleasesToAlbums(parsedBody['release-groups'])
       };
     })
-    .catch(err => {
-      return err;
-    });
+    .catch(err => next(new Error(err)));
 };
 
 const mapReleasesToAlbums = releaseGroups => {
